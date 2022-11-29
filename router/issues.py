@@ -1,24 +1,22 @@
 from fastapi import APIRouter, HTTPException, status
-
 from github import Github
 
 router = APIRouter()
-
 github = Github()
 
 @router.get("/issues")
-def get_repo_info(user_name : str):
-    user = github.get_user(user_name)
+def get_repo_issues(repo_name : str):
+    repository = github.get_repo(repo_name)
 
     issue_list = {}
-    for issue in user.get_issues:
+    for issue in repository.get_issues():
         currentIssue = {
-            "Name": issue.name,
-            "State": issue.state,
-            "Description": issue.description,
+            "Assignee": issue.assignee.assignee,
+            "Id": issue.id,
+            "Commit Id": issue.commit_id,
+            "Event": issue.event,
             "Date created": issue.created_at,
-            "Date closed": issue.closed_at
         }
-        issue_list[issue.name] = currentIssue
+        issue_list[issue.assignee.assignee] = currentIssue
         
     return issue_list

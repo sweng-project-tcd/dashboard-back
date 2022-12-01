@@ -7,7 +7,7 @@ router = APIRouter()
 github = Github()
 
 def calculate_percentage_increase(original: int, recent: int):
-    if recent == 0:
+    if original == 0:
         return 0
     difference = recent - original
     difference = difference/original

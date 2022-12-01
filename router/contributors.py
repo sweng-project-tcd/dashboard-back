@@ -8,7 +8,7 @@ github = Github()
 
 def calculate_percentage_increase(original: int, recent: int):
     if original == 0:
-        return 0
+        return recent*100
     difference = recent - original
     difference = difference/original
     return difference*100

@@ -81,7 +81,10 @@ def calculate_commits_increase(repo_name:str):
         percentage = str(difference) + "%"
     
 
-    return{"Increase in commits in the past week": percentage}
+    return{
+        "Increase in commits in the past week": percentage,
+        "Last week's date":str(last_weeks_monday.date())
+    }
 
 # @router.get("/issues")
 # def get_repo_issues(repo_name : str):

@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
-import datetime
+from fastapi import APIRouter, HTTPException, status, Query
 from datetime import timedelta
+from datetime import datetime
 from github import Github
+import random
 
 router = APIRouter()
 
@@ -41,6 +42,7 @@ def return_individual_contributions(repo_name:str):
 
 
 
+
 # return total number of commits so for in the week (commits since the most recent monday)
 @router.get("/repo/totalweeklycommits")
 def return_weekly_commits(repo_name : str):
@@ -57,6 +59,22 @@ def return_weekly_commits(repo_name : str):
         "Commits in the last week":commits.totalCount,
         "Commits since": str(most_recent_monday.date())
     }
+    
+# return total number of commits in the past week
+@router.get("/repo/commits")
+def return_weekly_commits(repo_name : str, start : datetime = Query(None), end : datetime = Query(None)):
+
+    # the url that the user should be passing in is something like ?start=2022-01-01&end=2022-01-31
+
+    # parses the dates passed in to a datetime object. This is the format that the github api uses
+    start_date = datetime.datetime.strptime(start, "%Y-%m-%d")
+    end_date = datetime.datetime.strptime(end, "%Y-%m-%d")
+
+    repository = github.get_repo(repo_name)
+    commits=repository.get_commits(since=start_date, until=end_date)
+
+    return {"commits":commits.totalCount}
+
 
 
 
@@ -114,3 +132,78 @@ def calculate_commits_increase(repo_name:str):
 #         issue_list[issue.assignee.assignee] = currentIssue
         
 #     return issue_list
+
+@router.get("/dummy/repo/commits")
+def dummy_repo_commits(start: str, end: str):
+    # generate a random number of commits based on the start and end dates
+    # this is just a dummy method for testing purposes
+
+    # get the number fo days between the start and end dates
+    start_date = datetime.strptime(start, "%Y-%m-%d")
+    end_date = datetime.strptime(end, "%Y-%m-%d")
+    delta = end_date - start_date
+    print(delta)
+
+    # generate a random number of commits based on the number of days
+    num_commits = random.randint(0, delta.days)
+
+    authors = ['John', 'Jane', 'Bob', 'Alice', 'Joe', 'Mary', 'Tom', 'Sally', 'Sue', 'Sam']
+
+    last_num_commits = random.randint(0, delta.days)
+
+    #  get thepercentage change in commits
+    percentage = 0
+    if last_num_commits == 0:
+        num_commits * 100
+        percentage = num_commits
+    else:
+        difference = num_commits - last_num_commits
+        difference = difference / last_num_commits
+        difference = round(difference*100, 1)
+        percentage = difference
+
+    print(percentage)
+
+    return {
+        "num_commits": num_commits,
+        "percent_change": percentage,
+        "authors": authors,
+        "start_date": start,
+        "end_date": end,
+    }
+
+@router.get("/dummy/repo/bugs")
+def dummy_repo_commits(start: str, end: str):
+    start_date = datetime.strptime(start, "%Y-%m-%d")
+    end_date = datetime.strptime(end, "%Y-%m-%d")
+    delta = end_date - start_date
+
+    monthly_bug_rate = []
+
+    random.seed(0)
+
+    x = 0
+
+    for i in range(delta.days):
+        # values have to be positive
+        dx = random.gauss(0, 1)
+        if dx < 0:
+            dx = 0
+        x += dx
+        monthly_bug_rate.append(int(x))
+
+    print(monthly_bug_rate)
+
+
+
+    
+    return {
+        "num_bugs": len(monthly_bug_rate),
+        "num_bugs_prev": 10,
+        "percent_change": 20,
+        "start_date": start,
+        "end_date": end,
+        "values": monthly_bug_rate,
+
+    }
+

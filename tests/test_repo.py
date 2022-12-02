@@ -9,6 +9,7 @@ from app import app
 
 client = TestClient(app)
 
+# constants for last weeks date
 most_recent_monday = datetime.datetime.now() - timedelta(days=datetime.datetime.now().weekday())
 last_weeks_monday = most_recent_monday - timedelta(days=7)
 last_weeks_monday = last_weeks_monday.date()

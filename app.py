@@ -6,7 +6,20 @@ from router.issues import router as issue_router
 from router.pullrequests import router as pull_request_router
 from router.commits import router as commit_router
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+origins = [
+    'http://localhost:3000',
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(sample_router, prefix="/v1", tags=["test"])
 

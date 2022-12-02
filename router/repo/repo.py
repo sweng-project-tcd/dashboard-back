@@ -41,7 +41,7 @@ def return_individual_contributions(repo_name:str):
 
 
 
-# return total number of commits in the past week
+# return total number of commits so for in the week (commits since the most recent monday)
 @router.get("/repo/totalweeklycommits")
 def return_weekly_commits(repo_name : str):
     try:
@@ -50,22 +50,24 @@ def return_weekly_commits(repo_name : str):
         raise HTTPException(status_code=404, detail="Repository not found")
 
     today = datetime.datetime.now()
-    last_week = today - timedelta(days=7) 
+    most_recent_monday = today - timedelta(days=today.weekday())
+    commits=repository.get_commits(since=most_recent_monday)
 
-    commits=repository.get_commits(since=last_week)
-
-    return {"Commits in the last week":commits.totalCount}
+    return {
+        "Commits in the last week":commits.totalCount,
+        "Commits since": str(most_recent_monday.date())
+    }
 
 
 
 # return percentage increase for commits in the past week
 @router.get("/repo/commitsincrease")
 def calculate_commits_increase(repo_name:str):
+    
+    #find commits this week
     today = datetime.datetime.now()
     most_recent_monday = today - timedelta(days=today.weekday())
     last_weeks_monday = most_recent_monday - timedelta(days=7)
-
-    #find commits this week
 
     try:
         repository = github.get_repo(repo_name)

@@ -37,6 +37,12 @@ def test_total_weekly_commits():
 
     response = client.get("v1/repo/totalweeklycommits?repo_name=testtest")
     assert response.status_code == 404
+    
+    # test if returned date is correct
+    response = client.get("v1/repo/totalweeklycommits?repo_name=strapi/strapi")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["Commits since"] == str(most_recent_monday.date())
 
 def test_contributors():
     response = client.get("v1/repo/contributors")

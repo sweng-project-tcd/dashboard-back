@@ -9,8 +9,9 @@ def test_commits_increase():
     response = client.get("v1/repo/commitsincrease")
     assert response.status_code == 422
 
-    response = client.get("v1/repo/commitsincrase?repo_name=testtest")
-    assert response.status_code == 404
+    response = client.get("v1/repo/commitsincrease?repo_name=StevenCataluna/pico-apps")
+    print(response.status_code)
+    assert response.status_code == 200
 
 
 def test_total_weekly_commits():

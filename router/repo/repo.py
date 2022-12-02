@@ -69,7 +69,7 @@ def calculate_commits_increase(repo_name:str):
     percentage = ""
     if commits_last_week == 0:
         commits_this_week * 100
-        percentage = commits_this_week + "%"
+        percentage = str(commits_this_week) + "%"
     else:
         difference = commits_this_week - commits_last_week
         difference = difference / commits_last_week

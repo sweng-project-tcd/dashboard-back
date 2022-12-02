@@ -12,6 +12,26 @@ github = Github()
 def return_individual_contributions(repo_name:str):
     repository = github.get_repo(repo_name)
 
+    contributor_list = repository.get_stats_contributors()
+    
+
+    contributors_info = {}
+
+  
+    counter = 0
+    for contributor in reversed(contributor_list):
+        if counter == 6:
+            break
+        weekly_contribution = contributor.weeks
+        contributors_info[contributor.author.name] = weekly_contribution[-1].c
+        counter = counter + 1
+
+
+
+    return contributors_info
+
+
+
 
 
 # return total number of commits in the past week
@@ -46,16 +66,15 @@ def calculate_commits_increase(repo_name:str):
     commits_last_week = last_week.totalCount
 
     #find percentage increase
-
     percentage = ""
     if commits_last_week == 0:
         commits_this_week * 100
         percentage = commits_this_week + "%"
-    
-    difference = commits_this_week - commits_last_week
-    difference = int(difference / commits_last_week)
-    difference = difference*100
-    percentage = str(difference) + "%"
+    else:
+        difference = commits_this_week - commits_last_week
+        difference = difference / commits_last_week
+        difference = round(difference*100, 1)
+        percentage = str(difference) + "%"
     
 
     return{"Increase in commits in the past week": percentage}

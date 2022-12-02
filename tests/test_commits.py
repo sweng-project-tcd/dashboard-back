@@ -4,6 +4,10 @@ from app import app
 
 client = TestClient(app)
 
+def test_commits_health_check():
+    res = client.get("v1/commits/health")
+    assert res.status_code == 200
+    assert res.json() == {"status": "OK"}
 
 def test_empty_commits():
     response = client.get("/v1/commits")
@@ -12,4 +16,4 @@ def test_empty_commits():
 def test_commits():
     res = client.get("/v1/commits?username=neilshevlin&start_date=2021-01-01&end_date=2021-01-31")
     assert res.status_code == 200
-    assert res.json() == {"username": "neilshevlin", "start_date": "2021-01-01", "end_date": "2021-01-31"}
+    assert res.json() == {"username": "neilshevlin", "start_date": "2021-01-01", "end_date": "2021-01-31", "total_commits": "10"}

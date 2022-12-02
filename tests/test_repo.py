@@ -35,9 +35,10 @@ def test_total_weekly_commits():
     response = client.get("v1/repo/totalweeklycommits")
     assert response.status_code == 422
 
+    # test invalid repo
     response = client.get("v1/repo/totalweeklycommits?repo_name=testtest")
     assert response.status_code == 404
-    
+
     # test if returned date is correct
     response = client.get("v1/repo/totalweeklycommits?repo_name=strapi/strapi")
     assert response.status_code == 200
@@ -47,6 +48,13 @@ def test_total_weekly_commits():
 def test_contributors():
     response = client.get("v1/repo/contributors")
     assert response.status_code == 422
+    # test invalid repo
+    response = client.get("v1/repo/contributors?repo_name=testtest")
+    assert response.status_code == 404
 
-    #response = client.get("v1/repo/contributors?repo_name=testtest")
-    #assert response.status_code == 404
+    # check if returned values are all ints
+    response = client.get("v1/repo/contributors?repo_name=strapi/strapi")
+    assert response.status_code == 200
+    data = response.json()
+    values = data.values()
+    assert all(isinstance(val, int) for val in values)

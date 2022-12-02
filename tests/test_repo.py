@@ -27,7 +27,7 @@ def test_commits_increase():
     assert data["Last week's date"] == str(last_weeks_monday)
 
     # check error code for invalid repo
-    response = client.get("v1/repo/commitincrease?repo_name=test")
+    response = client.get("v1/repo/commitsincrease?repo_name=test")
     assert response.status_code == 404
 
 
@@ -35,8 +35,8 @@ def test_total_weekly_commits():
     response = client.get("v1/repo/totalweeklycommits")
     assert response.status_code == 422
 
-    #response = client.get("v1/repo/totalweeklycommits?repo_name=testtest")
-    #assert response.status_code == 404
+    response = client.get("v1/repo/totalweeklycommits?repo_name=testtest")
+    assert response.status_code == 404
 
 def test_contributors():
     response = client.get("v1/repo/contributors")

@@ -14,7 +14,10 @@ def repo_health_check():
 # return each contributor with their number of commits in the last week
 @router.get("/repo/contributors")
 def return_individual_contributions(repo_name:str):
-    repository = github.get_repo(repo_name)
+    try:
+        repository = github.get_repo(repo_name)
+    except:
+        raise HTTPException(status_code=404, detail="Repository not found")
 
     contributor_list = repository.get_stats_contributors()
     
@@ -41,7 +44,11 @@ def return_individual_contributions(repo_name:str):
 # return total number of commits in the past week
 @router.get("/repo/totalweeklycommits")
 def return_weekly_commits(repo_name : str):
-    repository = github.get_repo(repo_name)
+    try:
+        repository = github.get_repo(repo_name)
+    except:
+        raise HTTPException(status_code=404, detail="Repository not found")
+
     today = datetime.datetime.now()
     last_week = today - timedelta(days=7) 
 
@@ -60,7 +67,10 @@ def calculate_commits_increase(repo_name:str):
 
     #find commits this week
 
-    repository = github.get_repo(repo_name)
+    try:
+        repository = github.get_repo(repo_name)
+    except:
+        raise HTTPException(status_code=404, detail="Repository not found")
 
     this_week = repository.get_commits(since=most_recent_monday)
     commits_this_week = this_week.totalCount

@@ -1,10 +1,24 @@
 from fastapi import APIRouter, HTTPException, status
+from github import Github
 
 router = APIRouter()
+
+github = Github()
+
 
 @router.get("/commits/health")
 def commits_health_check():
     return {"status": "OK"}
+
+
+@router.get("/commits")
+def commits(username: str, start_date: str, end_date: str):
+    try:
+        user = github.get_user(username)
+    except:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {"username": username, "start_date": start_date, "end_date": end_date, "total_commits": commits.totalCount()}
 
 # This method is meant to return the number of commits from a user in a given date range
 # @router.get("/commits")

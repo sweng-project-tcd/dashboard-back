@@ -7,6 +7,10 @@ router = APIRouter()
 
 github = Github()
 
+@router.get("/repo/health")
+def repo_health_check():
+    return {"status": "OK"}
+
 # return each contributor with their number of commits in the last week
 @router.get("/repo/contributors")
 def return_individual_contributions(repo_name:str):
@@ -59,3 +63,20 @@ def calculate_commits_increase(repo_name:str):
     
 
     return{"Increase in commits in the past week": percentage}
+
+# @router.get("/issues")
+# def get_repo_issues(repo_name : str):
+#     repository = github.get_repo(repo_name)
+
+#     issue_list = {}
+#     for issue in repository.get_issues():
+#         currentIssue = {
+#             "Assignee": issue.assignee.assignee,
+#             "Id": issue.id,
+#             "Commit Id": issue.commit_id,
+#             "Event": issue.event,
+#             "Date created": issue.created_at,
+#         }
+#         issue_list[issue.assignee.assignee] = currentIssue
+        
+#     return issue_list

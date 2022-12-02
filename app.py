@@ -9,7 +9,20 @@ from router.weeklycommits import router as weeklycommit_router
 from router.commitsincrease import router as commitsincrease_router
 from router.repo.repo import router as repo_router
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+origins = [
+    'http://localhost:3000',
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(sample_router, prefix="/v1", tags=["test"])
 

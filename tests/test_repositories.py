@@ -11,5 +11,11 @@ def test_empty_repositories():
 
 
 def test_nonexisting_repositories():
-    response = client.get("/v1/repos")
+    response = client.get("/v1/repositories?username=test")
     assert response.status_code == 404
+
+
+def test_repositories_health_check():
+    res = client.get("/v1/repo/health")
+    assert res.status_code == 200
+    assert res.json() == {"status": "OK"}

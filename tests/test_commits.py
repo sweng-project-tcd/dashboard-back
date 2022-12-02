@@ -10,6 +10,9 @@ def test_empty_commits():
     assert response.status_code == 422
 
 
-def test_nonexisting_commits():
-    response = client.get("/v1/commit")
-    assert response.status_code == 404
+def test_commits():
+    res = client.get(
+        "/v1/commits?username=neilshevlin&start_date=2021-01-01&end_date=2021-01-31")
+    assert res.status_code == 200
+    assert res.json() == {"username": "neilshevlin",
+                          "start_date": "2021-01-01", "end_date": "2021-01-31"}

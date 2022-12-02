@@ -10,6 +10,8 @@ def test_empty_contributors():
     assert response.status_code == 422
 
 
-def test_nonexisting_contributors():
-    response = client.get("/v1/contributor")
-    assert response.status_code == 404
+def test_incorrect_repository():
+    response = client.get("/v1/contributors?repo_name=test")
+
+    assert response.status_code == 200
+    assert response.json() == {"repository": "not found"}

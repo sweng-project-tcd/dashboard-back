@@ -5,10 +5,28 @@ from router.contributors import router as contributor_router
 from router.issues import router as issue_router
 from router.pullrequests import router as pull_request_router
 from router.commits import router as commit_router
+from router.weeklycommits import router as weeklycommit_router
+from router.commitsincrease import router as commitsincrease_router
+from router.repo.repo import router as repo_router
+
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+origins = [
+    'http://localhost:3000',
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(sample_router, prefix="/v1", tags=["test"])
+
+app.include_router(repo_router, prefix="/v1", tags=["repo"])
 
 # router for repositories 
 app.include_router(repo_router, prefix="/v1", tags=["repositories"])
@@ -24,3 +42,4 @@ app.include_router(pull_request_router, prefix="/v1", tags=["pullrequests"])
 
 #router for commits
 app.include_router(commit_router, prefix="/v1", tags=["commits"])
+
